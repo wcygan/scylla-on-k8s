@@ -1,3 +1,19 @@
+## Quickstart
+
+Start the application
+
+```bash
+skaffold dev
+```
+
+Ping the server
+
+```
+grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50051 ping.v1.PingService/Ping
+```
+
+## Scylla
+
 Using [cqlsh]()
 
 ```
