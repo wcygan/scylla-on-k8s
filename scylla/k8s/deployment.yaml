@@ -17,3 +17,8 @@ spec:
           image: scylladb/scylla:5.2.0
           ports:
             - containerPort: 9042
+          startupProbe:
+            tcpSocket:
+              port: 9042
+            failureThreshold: 10
+            periodSeconds: 5
