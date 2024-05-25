@@ -1,6 +1,17 @@
 apiVersion: skaffold/v4beta9
 kind: Config
 metadata:
+  name: roles
+manifests:
+  rawYaml:
+    - k8s/role.yaml
+    - k8s/rolebinding.yaml
+deploy:
+  kubectl: {}
+---
+apiVersion: skaffold/v4beta9
+kind: Config
+metadata:
   name: scylla-configuration
 manifests:
   rawYaml:
@@ -23,6 +34,7 @@ metadata:
 requires:
   - configs:
       - scylla-configuration
+      - roles
 manifests:
   rawYaml:
     - server/k8s/deployment.yaml

@@ -6,7 +6,7 @@ Start the application
 skaffold dev
 ```
 
-Ping the server
+Ping the server a few times to create some data
 
 ```
 grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50051 ping.v1.PingService/Ping
@@ -14,28 +14,31 @@ grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50051 ping.v1.Ping
 
 ## Scylla
 
-Using [cqlsh]()
+You can check the data that was created using [cqlsh]()
 
 ```
-kubectl exec -it POD_NAME -- cqlsh 
+kubectl exec -it $(kubectl get pods -l app=scylla-db -o jsonpath='{.items[0].metadata.name}') -- cqlsh
 ```
 
 Run some cql commands:
 
-```sql
-CREATE KEYSPACE mykeyspace WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
-USE mykeyspace;
-CREATE TABLE mytable (mykey text PRIMARY KEY, mycolumn text);
-INSERT INTO mytable (mykey, mycolumn) VALUES ('mykey', 'myvalue');
-SELECT * FROM mytable;
+```cql
+USE events;
+DESCRIBE TABLES;
+select * from pings;
 ```
 
-We will build a gRPC server that accepts "ping" messages, and simply writes the ping timestamp to a ScyllaDB table.
+## Port Forwarding
 
-Upon receiving a ping, the server will generate a uuid and record the timestamp at which the ping was received.
+Sometimes, if a port is not available, kubectl will choose a different port for the service. Keep an eye on the skaffold logs for this:
 
-## Ping Server
+```
+Port forwarding statefulset/scylla-db in namespace default, remote port 9042 -> http://127.0.0.1:9042
+Port forwarding deployment/server in namespace default, remote port 50051 -> http://127.0.0.1:50052
+```
 
-```bash
-grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50051 ping.v1.PingService/Ping
+Now if I wanted to send a gRPC request, it would be to `localhost:50052` instead of `localhost:50051`.
+
+```
+grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50052 ping.v1.PingService/Ping
 ```

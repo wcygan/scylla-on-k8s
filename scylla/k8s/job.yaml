@@ -14,7 +14,7 @@ spec:
             - |
               until nslookup scylla-db-0.scylla-db.default.svc.cluster.local; do
                 echo "Waiting for Scylla StatefulSet to be ready"
-                sleep 5
+                sleep 2
               done
       containers:
         - name: scylla-init

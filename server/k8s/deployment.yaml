@@ -13,13 +13,17 @@ spec:
         app: server
     spec:
       initContainers:
-        - name: wait-for-scylla-init
-          image: busybox:1.28
+        - name: wait-for-scylla-db
+          image: bitnami/kubectl:latest
           command:
             - /bin/sh
             - -c
             - |
-              until kubectl wait --for=condition=complete job/scylla-init --timeout=60s; do
+              until kubectl get svc scylla-db; do
+                echo "Waiting for scylla-db service to be ready"
+                sleep 5
+              done
+              until kubectl wait --for=condition=complete job/scylla-init --timeout=120s; do
                 echo "Waiting for scylla-init job to complete"
                 sleep 5
               done
