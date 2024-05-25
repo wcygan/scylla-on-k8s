@@ -1,0 +1,6 @@
+- Connect the `server` to `scylla-db`
+- Initialize `scylla-db` with an `events` table
+- Persist events to `scylla-db` when pings are received by the `server`
+- Connect to `scylla-db` locally (through port forwarding) or use cqlsh thru the `scylla` pod & check the events table
+- Add an endpoint that can search for pings using a criteria
+- Think about adding a new field to the `events` table & see what type of changes are needed in the codebase
