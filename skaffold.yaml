@@ -1,7 +1,7 @@
 apiVersion: skaffold/v4beta9
 kind: Config
 metadata:
-  name: scylla-on-kubernetes
+  name: scylla-configuration
 manifests:
   rawYaml:
     - scylla/k8s/deployment.yaml
@@ -10,6 +10,33 @@ deploy:
   kubectl: {}
 portForward:
   - resourceType: deployment
-    resourceName: chat-db
+    resourceName: scylla-db
     port: 9042
     localPort: 9042
+---
+apiVersion: skaffold/v4beta9
+kind: Config
+metadata:
+  name: server
+requires:
+  - configs:
+      - scylla-configuration
+manifests:
+  rawYaml:
+    - server/k8s/deployment.yaml
+    - server/k8s/service.yaml
+build:
+  local:
+    concurrency: 0
+  artifacts:
+    - image: server
+      context: .
+      docker:
+        dockerfile: server/Dockerfile
+deploy:
+  kubectl: {}
+portForward:
+  - resourceType: deployment
+    resourceName: server
+    port: 50051
+    localPort: 50051
