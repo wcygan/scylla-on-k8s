@@ -26,7 +26,7 @@ func (s *PingService) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingRes
 	token := uuid.New().String()
 	log.Printf("%s  ---  %d", token, timestamp)
 
-	if err := s.session.Query(`INSERT INTO events (id, timestamp) VALUES (?, ?)`, token, timestamp).Exec(); err != nil {
+	if err := s.session.Query(`INSERT INTO events.pings (id, timestamp) VALUES (?, ?)`, token, timestamp).Exec(); err != nil {
 		log.Printf("failed to insert event: %v", err)
 	}
 

@@ -22,6 +22,7 @@ var RootCmd = &cobra.Command{
 	Short: "Start the gRPC server",
 	Run: func(cmd *cobra.Command, args []string) {
 		cluster := gocql.NewCluster(scyllaAddress)
+		cluster.Keyspace = "events"
 		session, err := cluster.CreateSession()
 		if err != nil {
 			log.Fatalf("failed to create session: %v", err)
