@@ -13,3 +13,7 @@ CREATE TABLE mytable (mykey text PRIMARY KEY, mycolumn text);
 INSERT INTO mytable (mykey, mycolumn) VALUES ('mykey', 'myvalue');
 SELECT * FROM mytable;
 ```
+
+We will build a gRPC server that accepts "ping" messages, and simply writes the ping timestamp to a ScyllaDB table.
+
+Upon receiving a ping, the server will generate a uuid and record the timestamp at which the ping was received.
