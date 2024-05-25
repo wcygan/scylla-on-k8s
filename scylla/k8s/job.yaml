@@ -25,16 +25,10 @@ spec:
             - |
               cqlsh ${SCYLLA_HOST} \
                 -uroot \
-                -p${SCYLLA_PASSWORD} \
                 < /initdb/init.cql
           env:
             - name: SCYLLA_HOST
-              value: scylla-db.default.svc.cluster.local
-            - name: SCYLLA_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: scylla-secret
-                  key: password
+              value: scylla-db-0.scylla-db.default.svc.cluster.local
           volumeMounts:
             - name: scylla-initdb
               mountPath: /initdb
