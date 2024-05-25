@@ -4,6 +4,6 @@ metadata:
   name: scylla-db
 spec:
   selector: 
-    app: scylla
+    app: scylla-db
   ports:
     - port: 9042

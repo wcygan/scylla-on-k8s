@@ -4,12 +4,14 @@ metadata:
   name: scylla-configuration
 manifests:
   rawYaml:
-    - scylla/k8s/deployment.yaml
+    - scylla/k8s/statefulset.yaml
     - scylla/k8s/service.yaml
+    - scylla/k8s/job.yaml
+    - scylla/k8s/configmap.yaml
 deploy:
   kubectl: {}
 portForward:
-  - resourceType: deployment
+  - resourceType: statefulset
     resourceName: scylla-db
     port: 9042
     localPort: 9042

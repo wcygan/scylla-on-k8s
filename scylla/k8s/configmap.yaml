@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: scylla-initdb
+data:
+  init.cql: |
+
+    -- Create a keyspace and table for the events
+    CREATE KEYSPACE IF NOT EXISTS events WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+    -- Create a table for the pings
+    CREATE TABLE IF NOT EXISTS events.pings
+    (
+        id        uuid,
+        timestamp bigint,
+        PRIMARY KEY (id)
+    );

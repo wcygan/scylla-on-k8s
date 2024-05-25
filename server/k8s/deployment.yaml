@@ -12,6 +12,17 @@ spec:
       labels:
         app: server
     spec:
+      initContainers:
+        - name: wait-for-scylla-init
+          image: busybox:1.28
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until kubectl wait --for=condition=complete job/scylla-init --timeout=60s; do
+                echo "Waiting for scylla-init job to complete"
+                sleep 5
+              done
       containers:
         - name: server
           image: server

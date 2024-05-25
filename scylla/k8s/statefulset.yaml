@@ -1,19 +1,20 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: scylla-db
 spec:
+  serviceName: "scylla-db"
   replicas: 1
   selector:
     matchLabels:
-      app: scylla
+      app: scylla-db
   template:
     metadata:
       labels:
-        app: scylla
+        app: scylla-db
     spec:
       containers:
-        - name: scylla
+        - name: scylla-db
           image: scylladb/scylla:5.2.0
           ports:
             - containerPort: 9042
@@ -22,3 +23,11 @@ spec:
               port: 9042
             failureThreshold: 10
             periodSeconds: 5
+  volumeClaimTemplates:
+    - metadata:
+        name: scylla-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi

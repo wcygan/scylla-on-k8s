@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: scylla-init
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: wait-for-scylla
+          image: busybox:1.28
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until nslookup scylla-db-0.scylla-db.default.svc.cluster.local; do
+                echo "Waiting for Scylla StatefulSet to be ready"
+                sleep 5
+              done
+      containers:
+        - name: scylla-init
+          image: "scylladb/scylla:5.2.0"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              cqlsh ${SCYLLA_HOST} \
+                -uroot \
+                -p${SCYLLA_PASSWORD} \
+                < /initdb/init.cql
+          env:
+            - name: SCYLLA_HOST
+              value: scylla-db.default.svc.cluster.local
+            - name: SCYLLA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: scylla-secret
+                  key: password
+          volumeMounts:
+            - name: scylla-initdb
+              mountPath: /initdb
+      restartPolicy: Never
+      volumes:
+        - name: scylla-initdb
+          configMap:
+            name: scylla-initdb
