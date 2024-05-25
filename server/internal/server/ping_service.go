@@ -13,14 +13,14 @@ type PingService struct {
 	pb.UnimplementedPingServiceServer
 }
 
-// NewServer creates a new server.
-func NewServer() *PingService {
+// NewPingService creates a new server.
+func NewPingService() *PingService {
 	return &PingService{}
 }
 
 // Ping implements the Ping method from the PingService.
 func (s *PingService) Ping(ctx context.Context, in *pb.PingRequest) (*pb.PingResponse, error) {
-	timestamp := time.Now().Unix()
+	timestamp := time.Now().UnixMilli()
 	token := uuid.New().String()
 	log.Printf("%s  ---  %d", token, timestamp)
 	return &pb.PingResponse{}, nil
