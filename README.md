@@ -14,7 +14,7 @@ grpcurl -plaintext -proto proto/ping/v1/ping.proto  localhost:50051 ping.v1.Ping
 
 ## Scylla
 
-You can check the data that was created using [cqlsh]()
+You can check the data that was created using [cqlsh](https://opensource.docs.scylladb.com/stable/cql/cqlsh.html)
 
 ```
 kubectl exec -it $(kubectl get pods -l app=scylla-db -o jsonpath='{.items[0].metadata.name}') -- cqlsh
